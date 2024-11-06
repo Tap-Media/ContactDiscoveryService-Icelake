@@ -1,5 +1,11 @@
 ## Setup env
 
+- OS: Ubuntu 24 LTS
+- SGX support: 
+```
+cat /proc/cpuinfo |grep sgx
+```
+
 - Install build env
 ```
 sudo apt-get install build-essential
