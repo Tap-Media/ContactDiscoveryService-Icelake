@@ -1,0 +1,24 @@
+name: Build Application
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          submodules: true  # Checks out submodules as well
+
+      - name: Initialize and update git submodules
+        run: |
+          git submodule init
+          git submodule update
+
+      - name: Run Maven verify
+        run: mvn verify
