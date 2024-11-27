@@ -24,5 +24,8 @@ sudo make install -j8
 sudo ldconfig
 ```
 
-- Install openjdk 
+- Install openjdk
+  ```
+  apt install openjdk-21-jdk
+  ```
 
