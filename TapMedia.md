@@ -6,6 +6,9 @@
 cat /proc/cpuinfo |grep sgx
 ```
 
+- Install docker: https://docs.docker.com/engine/install/ubuntu/
+  
+
 - Install build env
 ```
 sudo apt-get install build-essential maven
