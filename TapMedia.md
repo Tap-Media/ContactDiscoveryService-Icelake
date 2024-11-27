@@ -32,3 +32,20 @@ sudo ldconfig
   apt install openjdk-21-jdk
   ```
 
+## Build source
+
+```
+git submodule init
+git submodule update
+mvn verify
+```
+
+## Build docker image
+- 
+
+```
+cd target
+
+```
+
+## Verify using docker-compose
