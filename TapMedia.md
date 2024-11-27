@@ -8,7 +8,7 @@ cat /proc/cpuinfo |grep sgx
 
 - Install build env
 ```
-sudo apt-get install build-essential
+sudo apt-get install build-essential maven
 ```
 
 
