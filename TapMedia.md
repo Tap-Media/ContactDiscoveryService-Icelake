@@ -41,9 +41,9 @@ mvn verify
 ```
 
 ## Build docker image
-- 
 
 ```
+cp Dockerfile ./target/
 cd target
 
 ```
