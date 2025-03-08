@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jre-focal
+FROM eclipse-temurin:21-jre-jammy
 
 RUN apt update && apt install -y gnupg2 wget gpg software-properties-common && \
     echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/20.04/prod focal main" | tee /etc/apt/sources.list.d/msprod.list && \
