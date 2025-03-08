@@ -1,8 +1,7 @@
 name: Build and push Docker image
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch: # Enables manual trigger
 
 permissions:
   id-token: write
