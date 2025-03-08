@@ -31,6 +31,7 @@ all: enclave.bin testhost.bin libjnishim.so enclave.signed fuzz.bin enclave.test
 
 .PHONY: install
 install: enclave.signed libjnishim.so
+	@echo "daonv --- ENCLAVE_ID is set to: $(ENCLAVE_ID)"
 	mkdir -pv $(INSTALL_DIR)
 	cp -fv enclave.signed $(INSTALL_DIR)/enclave-$(if $(ENCLAVE_ID),$(ENCLAVE_ID),$(shell $(OE_DIR)/bin/oesign dump -e enclave.signed | fgrep -i mrenclave | cut -d '=' -f2)).signed
 	cp -fv libjnishim.so $(INSTALL_DIR)/libjnishim-$(if $(ENCLAVE_ID),$(ENCLAVE_ID),$(shell $(OE_DIR)/bin/oesign dump -e enclave.signed | fgrep -i mrenclave | cut -d '=' -f2)).so
