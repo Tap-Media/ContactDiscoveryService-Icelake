@@ -27,11 +27,11 @@ jobs:
           java-version: 21
           cache: 'maven'
 
-      - name: Docker cache
-        uses: ./cdsi/.github/workflows/dockercache
-        with:
-          dockerdir: cdsi/c/docker
-          imagename: cdsi-enclave-build
+      # - name: Docker cache
+      #   uses: ./cdsi/.github/workflows/dockercache
+      #   with:
+      #     dockerdir: cdsi/c/docker
+      #     imagename: cdsi-enclave-build
 
       - name: 'Az CLI login'
         uses: azure/login@a65d910e8af852a8061c627c456678983e180302 # Azure Login Action v2.2.0
