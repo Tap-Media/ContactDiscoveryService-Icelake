@@ -1,9 +1,7 @@
 name: Build Application
 
 on:
-  push:
-    branches:
-      - develop
+  workflow_dispatch: # Enables manual trigger
 
 jobs:
   build:
