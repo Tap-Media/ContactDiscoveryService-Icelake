@@ -12,6 +12,13 @@ RUN apt update && apt install -y gnupg2 wget gpg software-properties-common && \
           libsgx-dcap-default-qpl=1.20.100.2-focal1 \
           libsgx-dcap-default-qpl-dev=1.20.100.2-focal1
 
+
+
+# install openssl 1.1.1
+RUN apt-get install -y build-essential
+RUN cd /tmp/; wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz; tar xvf openssl-1.1.1c.tar.gz; cd openssl-1.1.1c/; ./config; make  -j8; make install -j8; ldconfig
+
+
 WORKDIR /home/app
 COPY classes /home/app/classes
 COPY dependency/* /home/app/libs/
