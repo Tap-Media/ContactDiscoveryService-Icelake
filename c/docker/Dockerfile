@@ -17,7 +17,7 @@ RUN mkdir /src && \
     libssl-dev \
     gdb \
     libprotobuf17 \
-    openjdk-21-jdk \
+    openjdk-17-jdk-headless \
     libtool \
     bison \
     automake \
