@@ -52,7 +52,7 @@ RUN wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
     open-enclave=0.19.4
 
 ENV PATH="/opt/openenclave/bin:${PATH}"
-ENV JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+ENV JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
 ENV PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/opt/openenclave/share/pkgconfig"
 
 WORKDIR /src
