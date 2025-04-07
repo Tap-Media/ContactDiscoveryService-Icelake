@@ -21,10 +21,10 @@ RUN cd /tmp/; wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz; tar xvf
 # Tapmedia:
 RUN echo "deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/intel-sgx.list \
     && wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add -
-RUN apt update && \
-    apt install -y \
-    libsgx-quote-ex \
-    libsgx-aesm-quote-ex-plugin
+# RUN apt update && \
+#     apt install -y \
+#     libsgx-quote-ex \
+#     libsgx-aesm-quote-ex-plugin
 
 WORKDIR /home/app
 COPY classes /home/app/classes
@@ -36,7 +36,7 @@ EXPOSE 8080
 # https://docs.microsoft.com/en-us/azure/confidential-computing/confidential-nodes-aks-addon
 ENV SGX_AESM_ADDR=1
 
-RUN groupadd --gid 10000 cds && useradd --uid 10000 --gid 10000 cds
-USER 10000
+# RUN groupadd --gid 10000 cds && useradd --uid 10000 --gid 10000 cds
+# USER 10000
 
 ENTRYPOINT ["java", "-cp", "/home/app/libs/*:/home/app/classes/", "org.signal.cdsi.Application"]
