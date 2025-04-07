@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-focal@sha256:2a745ae31642c48aaf024ac52054ee5a534ab695660c1e7ca6f3306893bb07c1
+FROM ivanneto/eclipse-temurin:21.0.1_12-jre-focal
 
 RUN apt update && apt install -y gnupg2 wget gpg software-properties-common && \
     echo "deb [arch=amd64] https://packages.microsoft.com/ubuntu/20.04/prod focal main" | tee /etc/apt/sources.list.d/msprod.list && \
@@ -12,6 +12,20 @@ RUN apt update && apt install -y gnupg2 wget gpg software-properties-common && \
           libsgx-dcap-default-qpl=1.20.100.2-focal1 \
           libsgx-dcap-default-qpl-dev=1.20.100.2-focal1
 
+
+
+# install openssl 1.1.1
+RUN apt-get install -y build-essential
+RUN cd /tmp/; wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz; tar xvf openssl-1.1.1c.tar.gz; cd openssl-1.1.1c/; ./config; make  -j8; make install -j8; ldconfig
+
+# Tapmedia:
+RUN echo "deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" | tee /etc/apt/sources.list.d/intel-sgx.list \
+    && wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add -
+RUN apt update && \
+    apt install -y \
+    libsgx-quote-ex \
+    libsgx-aesm-quote-ex-plugin
+
 WORKDIR /home/app
 COPY classes /home/app/classes
 COPY dependency/* /home/app/libs/
@@ -22,7 +36,7 @@ EXPOSE 8080
 # https://docs.microsoft.com/en-us/azure/confidential-computing/confidential-nodes-aks-addon
 ENV SGX_AESM_ADDR=1
 
-#RUN groupadd --gid 10000 cds && useradd --uid 10000 --gid 10000 cds
-#USER 10000
+# RUN groupadd --gid 10000 cds && useradd --uid 10000 --gid 10000 cds
+# USER 10000
 
 ENTRYPOINT ["java", "-cp", "/home/app/libs/*:/home/app/classes/", "org.signal.cdsi.Application"]
