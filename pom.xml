@@ -478,5 +478,30 @@
         </plugins>
       </build>
     </profile>
+    <profile>
+      <id>build-prod-enclave</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+              <execution>
+                <id>build-prod-enclave</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <configuration>
+                  <executable>make</executable>
+                  <commandlineArgs>CONFIG=cds.conf RESOURCES_DIR=${project.build.outputDirectory}/org/signal/cdsi/enclave -C c ${make.docker.prefix}install</commandlineArgs>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 </project>
