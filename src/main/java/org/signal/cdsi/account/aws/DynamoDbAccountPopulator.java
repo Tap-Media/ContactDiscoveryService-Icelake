@@ -390,4 +390,20 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
   public void complete() {
     logger.debug("Subscription to stream {} complete", shardId);
   }
+
+  /**
+   * Periodically reloads the full account table from DynamoDB every 2 minutes.
+   */
+  @Scheduled(fixedDelay = "2m")
+  void reloadFullAccountTable() {
+    logger.info("Scheduled reload: Reloading full account table from DynamoDB");
+    getAccountSnapshot()
+        .bufferTimeout(BATCH_SIZE, BATCH_TIMEOUT)
+        .doOnComplete(() -> logger.info("Scheduled reload: Finished reloading account table"))
+        .doOnError(throwable -> logger.error("Scheduled reload: Failed to reload account table", throwable))
+        .subscribe(entries -> {
+          enclave.loadData(entries, false).join();
+          entriesFromTableCounter.increment(entries.size());
+        });
+  }
 }
