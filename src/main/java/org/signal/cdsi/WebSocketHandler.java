@@ -188,29 +188,11 @@ public class WebSocketHandler {
 
   @OnMessage(maxPayloadLength = 10<<20)
   public void onMessage(final WebSocketSession session, final byte[] message) {
-    logger.debug("Received websocket message for userId {} on platform {} on session {}, message size: {} bytes", 
-        userId, platformTag.getValue(), session.getId(), message.length);
-
-    // Attempt to log the phone number(s) sent from the client (if possible)
-    try {
-      String msgHex = javax.xml.bind.DatatypeConverter.printHexBinary(message);
-      logger.debug("Raw client message hex: {}", msgHex);
-      // Try to extract ASCII substrings that look like E164 phone numbers
-      String ascii = new String(message, java.nio.charset.StandardCharsets.US_ASCII);
-      java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\+[0-9]{6,15}").matcher(ascii);
-      while (matcher.find()) {
-        logger.debug("Extracted phone number from client message: {}", matcher.group());
-      }
-    } catch (Exception e) {
-      logger.warn("Failed to log or extract phone number from client message", e);
-    }
-    
     logger.trace("Received websocket message for userId {} on session {}", userId, session.getId());
     final ByteBuffer msg = ByteBuffer.allocateDirect(message.length).put(message).flip();
     chain = chain
         .thenCompose(v -> {
-          logger.debug("Processing websocket message for userId {} on platform {} on session {}", 
-              userId, platformTag.getValue(), session.getId());
+          logger.trace("Processing websocket message for userId {} on session {}", userId, session.getId());
           return switch (client.getState()) {
             case UNINITIALIZED -> time("handshake", client.handshake(msg));
             case ATTESTED -> time("rateLimit", client.rateLimit(msg));
@@ -220,10 +202,8 @@ public class WebSocketHandler {
         })
         .thenCompose(response -> session.sendAsync(response))
         .thenAccept(v -> {
-          logger.debug("Client state: {} for platform {}", client.getState(), platformTag.getValue());
           logger.trace("Client state: {}", client.getState());
           if (client.getState() == State.COMPLETE) {
-            logger.debug("Closing websocket session {} normally for platform {}", session.getId(), platformTag.getValue());
             logger.trace("Closing websocket session {} normally", session.getId());
             this.close(session, CloseReason.NORMAL);
             closed = true;
