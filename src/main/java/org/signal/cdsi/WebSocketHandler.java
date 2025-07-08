@@ -193,7 +193,13 @@ public class WebSocketHandler {
 
     // Attempt to log the phone number(s) sent from the client (if possible)
     try {
-      String msgHex = javax.xml.bind.DatatypeConverter.printHexBinary(message);
+      String msgHex;
+      try {
+        msgHex = java.util.HexFormat.of().formatHex(message);
+      } catch (NoClassDefFoundError | Exception e) {
+        // Fallback for older Java versions
+        msgHex = bytesToHex(message);
+      }
       logger.debug("Raw client message hex: {}", msgHex);
       // Try to extract ASCII substrings that look like E164 phone numbers
       String ascii = new String(message, java.nio.charset.StandardCharsets.US_ASCII);
@@ -230,6 +236,15 @@ public class WebSocketHandler {
           }
         })
         .exceptionally(err -> closeWithError(session, err));
+  }
+
+  // Helper for hex encoding if HexFormat is not available
+  private static String bytesToHex(byte[] bytes) {
+    StringBuilder sb = new StringBuilder(bytes.length * 2);
+    for (byte b : bytes) {
+      sb.append(String.format("%02X", b));
+    }
+    return sb.toString();
   }
 
   private static class ClosedEarlyException extends Exception {}
