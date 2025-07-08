@@ -196,7 +196,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
   @Scheduled(fixedDelay = "1m")
   void renewSubscription() {
     if (shouldRenewSubscription) {
-      logger.debug("Renewing subscription to shard {}", shardId);
+      logger.info("Renewing subscription to shard {}", shardId);
       subscribeToShard();
     }
   }
@@ -276,7 +276,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
 
   @VisibleForTesting
   static long e164FromString(final String s) {
-    logger.debug("Parsing e164 phone number: '{}'", s);
+    logger.info("Parsing e164 phone number: '{}'", s);
     
     if (!s.startsWith("+")) {
       logger.error("e164 phone number '{}' does not start with '+' prefix", s);
@@ -285,7 +285,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
 
     try {
       long result = Long.parseLong(s, 1, s.length(), 10);
-      logger.debug("Successfully parsed e164 '{}' to long: {}", s, result);
+      logger.info("Successfully parsed e164 '{}' to long: {}", s, result);
       return result;
     } catch (NumberFormatException e) {
       logger.error("Failed to parse e164 phone number '{}' as long: {}", s, e.getMessage());
@@ -319,7 +319,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
     // `exceptionOccurred`, and `complete`). `responseReceived` and `exceptionOccurred` tell us whether this call
     // succeeded or failed, while readers might reasonably expect that information to be part of the value returned by
     // a call to `subscribeToShard`.
-    logger.debug("Subscribing to shard {}", shardId);
+    logger.info("Subscribing to shard {}", shardId);
 
     kinesisAsyncClient.subscribeToShard(SubscribeToShardRequest.builder()
             .shardId(shardId)
@@ -336,7 +336,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
 
   @Override
   public void responseReceived(final SubscribeToShardResponse subscribeToShardResponse) {
-    logger.debug("Subscribed to shard {}", shardId);
+    logger.info("Subscribed to shard {}", shardId);
   }
 
   @Override
@@ -398,7 +398,7 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
 
   @Override
   public void complete() {
-    logger.debug("Subscription to stream {} complete", shardId);
+    logger.info("Subscription to stream {} complete", shardId);
   }
 
   /**
