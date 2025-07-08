@@ -188,7 +188,7 @@ public class WebSocketHandler {
 
   @OnMessage(maxPayloadLength = 10<<20)
   public void onMessage(final WebSocketSession session, final byte[] message) {
-    logger.debug("Received websocket message for userId {} on platform {} on session {}, message size: {} bytes", 
+    logger.info("Received websocket message for userId {} on platform {} on session {}, message size: {} bytes", 
         userId, platformTag.getValue(), session.getId(), message.length);
 
     // Attempt to log the phone number(s) sent from the client (if possible)
@@ -200,12 +200,12 @@ public class WebSocketHandler {
         // Fallback for older Java versions
         msgHex = bytesToHex(message);
       }
-      logger.debug("Raw client message hex: {}", msgHex);
+      logger.info("Raw client message hex: {}", msgHex);
       // Try to extract ASCII substrings that look like E164 phone numbers
       String ascii = new String(message, java.nio.charset.StandardCharsets.US_ASCII);
       java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\+[0-9]{6,15}").matcher(ascii);
       while (matcher.find()) {
-        logger.debug("Extracted phone number from client message: {}", matcher.group());
+        logger.info("Extracted phone number from client message: {}", matcher.group());
       }
     } catch (Exception e) {
       logger.warn("Failed to log or extract phone number from client message", e);
