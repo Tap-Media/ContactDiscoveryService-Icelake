@@ -276,11 +276,21 @@ class DynamoDbAccountPopulator implements AccountPopulator, SubscribeToShardResp
 
   @VisibleForTesting
   static long e164FromString(final String s) {
+    logger.debug("Parsing e164 phone number: '{}'", s);
+    
     if (!s.startsWith("+")) {
+      logger.error("e164 phone number '{}' does not start with '+' prefix", s);
       throw new IllegalArgumentException("e164 not prefixed with '+'");
     }
 
-    return Long.parseLong(s, 1, s.length(), 10);
+    try {
+      long result = Long.parseLong(s, 1, s.length(), 10);
+      logger.debug("Successfully parsed e164 '{}' to long: {}", s, result);
+      return result;
+    } catch (NumberFormatException e) {
+      logger.error("Failed to parse e164 phone number '{}' as long: {}", s, e.getMessage());
+      throw e;
+    }
   }
 
   private void subscribeToShard() {
